@@ -1,0 +1,4 @@
+EMR_ID, PHR_ID, Patient_Name, Action, ConscentID, TargetURL
+E12345, 45096767,John,get vital signs, cs28783,https://hapi.fhir.org/baseR4/Observation?category=vital-signs&subject=45096769
+E11111, abc123468,Merry, get wave form, cs12553, WaveformServer/acd-eex-23h
+E22222, 45096834,Bol, get image, cs12333, DICOMwebServer.Study/234.67.89.34
