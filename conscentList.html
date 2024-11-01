@@ -1,19 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Table Display from URL</title>
-
+    <title>從 URL 讀取 CSV 資料表格顯示</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+<script src="Cookie.js"></script>     
 </head>
 <body>
 
-<h2>CSV Data Display</h2>
+<h2>從 URL 讀取的 CSV 資料表格</h2>
+<div>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>EMR_ID</th>
+                <th>PHR_ID</th>
+                <th>Patient_Name</th>
+                <th>Action</th>
+                <th>ConscentID</th>
+                <th>TargetURL</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-<div id="table-container"></div>
-<div id="display">Click on a row to see details here.</div>
+<p>點選任一列資料以顯示 PHR_ID 和 Patient_Name</p>
+<p id="selectedData"></p>
 
+<script>
+// 設定 CSV 檔的 URL
+const csvUrl = 'my_patient_List.csv'; // 替換為實際的 CSV 檔 URL
 
+// 將 CSV 資料解析為陣列
+function parseCSV(data) {
+    const rows = data.trim().split('\n');
+    const headers = rows[0].split(',');
+    const records = rows.slice(1).map(row => {
+        const values = row.split(',');
+        return headers.reduce((obj, header, i) => {
+            obj[header.trim()] = values[i].trim();
+            return obj;
+        }, {});
+    });
+    return records;
+}
+
+// 在表格中顯示 CSV 資料
+function displayTable(data) {
+    const tbody = document.querySelector('#dataTable tbody');
+    data.forEach(record => {
+        const row = document.createElement('tr');
+        Object.values(record).forEach(cellData => {
+            const cell = document.createElement('td');
+            cell.textContent = cellData;
+            row.appendChild(cell);
+        });
+        row.addEventListener('click', () => displayDetails(record));
+        tbody.appendChild(row);
+    });
+}
+
+// 顯示點選列的 PHR_ID 和 Patient_Name
+function displayDetails(record) {
+    const selectedData = document.getElementById('selectedData');
+    selectedData.textContent = `PHR_ID: ${record.PHR_ID}, Patient_Name: ${record.Patient_Name}`;
+    setCookie("patientID",record.PHR_ID, 1);
+    setCookie("patientName",record.Patient_Name, 1);
+    setCookie("TargetURL",record.TargetURL, 1);
+
+}
+
+// 從 URL 讀取 CSV 資料並初始化頁面
+document.addEventListener('DOMContentLoaded', () => {
+    fetch(csvUrl)
+        .then(response => response.text())
+        .then(data => {
+            const records = parseCSV(data);
+            displayTable(records);
+        })
+        .catch(error => console.error('讀取 CSV 失敗:', error));
+});
+</script>
 
 </body>
 </html>
