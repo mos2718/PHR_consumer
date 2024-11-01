@@ -35,7 +35,7 @@
 
 <script>
 // Replace with the URL of your CSV file
-const csvUrl = 'my_Patient_List.csv';
+const csvUrl = 'cList.csv';
 
 
 // Function to parse CSV data
@@ -84,7 +84,7 @@ function displayTable(records) {
             document.getElementById('display').textContent = `PHR_ID: ${record.PHR_ID}, Name: ${record.Patient_Name}`;
             setCookie("patientID",record.PHR_ID, 1);
             setCookie("patientName",record.Patient_Name, 1);
-            setCookie("TargetURL",record.TargetURL, 1);
+       //     setCookie("TargetURL",record.TargetURL, 1);
            
         });
 
